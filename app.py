@@ -50,7 +50,7 @@ tools = [
 ]
 
 
-class Response(BaseModel):
+class AgentResponse(BaseModel):
     cc: Optional[str] = Field(description="The email address to CC in the reply.")
     body: str = Field(description="The plain text body of the reply.")
 
@@ -59,7 +59,7 @@ agent = Agent(
     name="Connect Agent",
     instructions=instructions,
     tools=tools,
-    output_type=Response,
+    output_type=AgentResponse,
 )
 
 app = Flask(__name__)
@@ -81,7 +81,7 @@ Body:\n{message.text}
 """
     print("Prompt:\n\n", prompt, "\n")
 
-    response = Response(**asyncio.run(Runner.run(agent, prompt)))
+    response = AgentResponse(**asyncio.run(Runner.run(agent, prompt)))
     print("Response:\n\n", response, "\n")
 
     client.inboxes.messages.reply(
