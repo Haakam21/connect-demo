@@ -1,0 +1,5 @@
+python-dotenv
+agentmail
+agentmail-toolkit
+openai-agents
+flask
