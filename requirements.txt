@@ -3,3 +3,4 @@ agentmail
 agentmail-toolkit
 openai-agents
 flask
+gunicorn
