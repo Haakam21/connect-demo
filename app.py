@@ -81,7 +81,7 @@ Body:\n{message.text}
 """
     print("Prompt:\n\n", prompt, "\n")
 
-    response = AgentResponse(**asyncio.run(Runner.run(agent, prompt)).final_output)
+    response: AgentResponse = asyncio.run(Runner.run(agent, prompt)).final_output
     print("Response:\n\n", response, "\n")
 
     client.inboxes.messages.reply(
