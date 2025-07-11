@@ -76,26 +76,32 @@ def receive_webhook():
 def process_webhook(payload):
     message = Message(**payload["message"])
 
-    if message.cc:
-        print(f"Skipping message with CC: {message.cc}")
-        return
+    try:
 
-    thread = client.inboxes.threads.get(
-        inbox_id=message.inbox_id, thread_id=message.thread_id
-    )
+        thread = client.inboxes.threads.get(
+            inbox_id=message.inbox_id, thread_id=message.thread_id
+        )
 
-    prompt = thread.model_dump_json()
-    print("Prompt:\n\n", prompt, "\n")
+        prompt = thread.model_dump_json()
+        print("Prompt:\n\n", prompt, "\n")
 
-    response: AgentResponse = asyncio.run(Runner.run(agent, prompt)).final_output
-    print("Response:\n\n", response.model_dump_json(), "\n")
+        response: AgentResponse = asyncio.run(Runner.run(agent, prompt)).final_output
+        print("Response:\n\n", response.model_dump_json(), "\n")
 
-    client.inboxes.messages.reply(
-        inbox_id=message.inbox_id,
-        message_id=message.message_id,
-        cc=response.cc,
-        text=response.body,
-    )
+        client.inboxes.messages.reply(
+            inbox_id=message.inbox_id,
+            message_id=message.message_id,
+            cc=response.cc,
+            text=response.body,
+        )
+    except Exception as e:
+        print("Error processing message:", e)
+
+        client.inboxes.messages.reply(
+            inbox_id=message.inbox_id,
+            message_id=message.message_id,
+            text=f"Hi,\n\nI'm sorry, there was an error processing your message: {str(e)}\n\nPlease try again later.\n\nBest,\nAgentMail",
+        )
 
 
 if __name__ == "__main__":
