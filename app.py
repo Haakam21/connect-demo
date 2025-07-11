@@ -76,8 +76,11 @@ def receive_webhook():
 def process_webhook(payload):
     message = Message(**payload["message"])
 
-    try:
+    if message.cc:
+        print("Skipping message with CC:", message.cc)
+        return
 
+    try:
         thread = client.inboxes.threads.get(
             inbox_id=message.inbox_id, thread_id=message.thread_id
         )
