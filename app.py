@@ -17,7 +17,7 @@ load_dotenv()
 client = AgentMail()
 
 inbox = client.inboxes.create(
-    display_name="Connect Demo",
+    display_name="AgentMail",
     username="connect",
     client_id="connect-demo-inbox",
 )
@@ -82,7 +82,7 @@ Body:\n{message.text}
     print("Prompt:\n\n", prompt, "\n")
 
     response: AgentResponse = asyncio.run(Runner.run(agent, prompt)).final_output
-    print("Response:\n\n", response, "\n")
+    print("Response:\n\n", response.model_dump_json(), "\n")
 
     client.inboxes.messages.reply(
         inbox_id=inbox.inbox_id,
