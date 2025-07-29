@@ -76,8 +76,8 @@ def receive_webhook():
 def process_webhook(payload):
     message = Message(**payload["message"])
 
-    if message.cc:
-        print("Skipping message with CC:", message.cc)
+    if message.cc or message.bcc:
+        print("Skipping message with CC or BCC:", message.cc, message.bcc)
         return
 
     try:
